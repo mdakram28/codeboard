@@ -5,12 +5,13 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var routes_index = require('./routes/index');
+//var routes_index = require('./app/routes/admin/index');
+var injector = require("./app/inject");
 
 var app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'app/views'));
 app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
@@ -22,7 +23,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'bower_components')));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes_index.router);
+injector.initDAO(["adminDAO","userDAO"]);
+injector.initRoutes(["administration/challenges"]);
+
+injector.injectRoute(app,"/","administration/challenges");
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
