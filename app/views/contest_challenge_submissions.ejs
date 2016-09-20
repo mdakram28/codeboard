@@ -1,0 +1,131 @@
+<%- include("components/template-start",{
+    active : "contests",
+    bodyClasses : "content-page"
+}) %>
+
+
+<div class="header header-filter" style="background-image: url('/img/bg2.jpeg');">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <h1 class="title text-center"><%= contest.title %></h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="main main-raised">
+    <div class="container">
+            <div class="row">
+                <div class="card card-nav-tabs card-plain">
+                    <div class="header header-danger">
+                        <!-- colors: "header-primary", "header-info", "header-success", "header-warning", "header-danger" -->
+                        <div class="nav-tabs-navigation">
+                            <div class="nav-tabs-wrapper">
+                                <ul class="nav nav-tabs" data-tabs="tabs">
+                                    <li style="margin-right:10px" class="bg-success"><a href="../"><img style="max-width:75%" src="/img/arrow-left.png"></a></li>
+                                    <li class=""><a href="problem">Problem</a></li>
+                                    <li class="active"><a href="submission">Submissions</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="pull-left">
+                    <h2><%= challenge.title %></h2>
+                </div>
+            </div>
+
+            <hr/>
+<style>
+td{
+     vertical-align : middle !important;
+}
+</style>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Challenge</th>
+                        <th>Language</th>
+                        <th>Time</th>
+                        <th>Score</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="sub in submissions">
+                        <td>{{$index}}</td>
+                        <td>{{sub.challenge.title}}</td>
+                        <td>{{sub.language}}</td>
+                        <td>{{sub.timeSubmitted}}</td>
+                        <td>{{sub.score}}</td>
+                        <td><button class="btn btn-primary btn-sm" ng-click="viewSubmission(sub)">View</button></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <hr/>
+    </div>
+</div>
+<div class="modal fade" id="submissionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 80vw;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">View Submission</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table" ng-hide="sub.testcases.length==0">
+                    <thead>
+                        <tr>
+                            <th>Testcase #</th>
+                            <th>Program Run</th>
+                            <th>Output Match</th>
+                            <th>Remark</th>
+                            <th>Points</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="out in sub.testcases" ng-class="{true:'bg-success',false:'bg-danger'}[out.success && out.match]">
+                            <th>{{out.i}}</th>
+                            <th>{{out.success}}</th>
+                            <th>{{out.match}}</th>
+                            <th>{{out.err}}</th>
+                            <th>{{out.score}}</th>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr/>
+                <pre>{{sub.code}}</pre>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<%- include("components/template-end") %>
+<script src="/angular/angular.min.js"></script>
+<script>
+    var app = angular.module("app",[]);
+    var scope;
+    var http;
+
+    app.controller("controller",function($scope,$http){
+        scope = $scope;
+        http = $http;
+        scope.submissions = <%- JSON.stringify(submissions) %>;
+        scope.sub = scope.submissions[0];
+        scope.viewSubmission = function(sub){
+            scope.sub = sub;
+            $("#submissionModal").modal("show");
+        }
+    });
+</script>

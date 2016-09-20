@@ -1,0 +1,96 @@
+<%- include("components/template-start",{
+    active : "contests",
+    bodyClasses : "content-page"
+}) %>
+
+<%
+function getChallengeEditLink(challenge){
+return "/administration/challenges/"+challenge._id.toString()+"/details";
+}
+%>
+
+<div class="header header-filter" style="background-image: url('https://images.unsplash.com/photo-1423655156442-ccc11daa4e99?crop=entropy&amp;dpr=2&amp;fit=crop&amp;fm=jpg&amp;h=750&amp;ixjsv=2.1.0&amp;ixlib=rb-0.3.5&amp;q=50&amp;w=1450');">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <h1 class="title text-center">Edit Contest</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="main main-raised">
+    <div class="container">
+        <form action="" method="post">
+            <div class="row">
+                <div class="card card-nav-tabs card-plain">
+                    <div class="header header-danger">
+                        <!-- colors: "header-primary", "header-info", "header-success", "header-warning", "header-danger" -->
+                        <div class="nav-tabs-navigation">
+                            <div class="nav-tabs-wrapper">
+                                <ul class="nav nav-tabs" data-tabs="tabs">
+                                    <li style="margin-right:10px" class="bg-success"><a href="/administration/contests/"><img style="max-width:75%" src="/img/arrow-left.png"></a></li>
+                                    <li class=""><a href="details">Details</a></li>
+                                    <li class="active"><a href="challenges">Challenges</a></li>
+                                    <li class=""><a href="challenges">Notification</a></li>
+                                    <li class=""><a href="challenges">Registrations</a></li>
+                                    <li class=""><a href="challenges">Statistics</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="pull-left">
+                    <h2>Manage Challenges</h2>
+                </div>
+                <div class="pull-right">
+                    <a href="/administration/challenges/add/<%= contest._id.toString() %>" type="submit" class="btn btn-lg btn-primary" >Add Challenge</a>
+                </div>
+            </div>
+
+            <div class="row">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Challenge Name</th>
+                        <th>Challenge Difficulty</th>
+                        <th>Challenge Score Weight</th>
+                        <th class="text-right">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% challenges.forEach(function(challenge){ %>
+                    <tr>
+                        <td><a href="<%= getChallengeEditLink(challenge) %>"><%= challenge.title %></a></td>
+                        <td><%= challenge.difficulty %></td>
+                        <td><%= challenge.score %></td>
+                        <td class="td-actions text-right">
+                            <a href="<%= getChallengeEditLink(challenge) %>" rel="tooltip" title="Edit Contest" class="btn btn-success btn-simple btn-xs">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                            <button type="button" rel="tooltip" title="Remove contest" class="btn btn-danger btn-simple btn-xs">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <% }) %>
+                    </tbody>
+                </table>
+            </div>
+
+            <hr/>
+
+        </form>
+    </div>
+</div>
+<script>
+    $(function(){
+        $('.datepicker').datepicker({
+            weekStart:1
+        });
+    });
+</script>
+<%- include("components/template-end") %>

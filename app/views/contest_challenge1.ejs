@@ -1,0 +1,225 @@
+<%- include("components/template-start",{
+    active : "contests",
+    bodyClasses : "content-page"
+}) %>
+
+
+<div class="header header-filter" style="background-image: url('/img/bg2.jpeg');">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <h1 class="title text-center"><%= contest.title %></h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="main main-raised" ng-app="app" ng-controller="controller">
+    <div class="container">
+        <form action="" method="post">
+            <div class="row">
+                <div class="card card-nav-tabs card-plain">
+                    <div class="header header-danger">
+                        <!-- colors: "header-primary", "header-info", "header-success", "header-warning", "header-danger" -->
+                        <div class="nav-tabs-navigation">
+                            <div class="nav-tabs-wrapper">
+                                <ul class="nav nav-tabs" data-tabs="tabs">
+                                    <li style="margin-right:10px" class="bg-success"><a href="../"><img style="max-width:75%" src="/img/arrow-left.png"></a></li>
+                                    <li class="active"><a href="problem">Problem</a></li>
+                                    <li class=""><a href="submission">Submissions</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="pull-left">
+                    <h2><%= challenge.title %></h2>
+                </div>
+            </div>
+
+            <hr/>
+
+            <%= challenge.description %>
+            <h3>Problem</h3>
+            <%= challenge.problemStatement %>
+            <h3>Input Format</h3>
+            <%= challenge.inputFormat %>
+            <h3>Constraints</h3>
+            <%= challenge.constraints %>
+            <h3>Output Format</h3>
+            <%= challenge.outputFormat %>
+            <h3>Sample Input</h3>
+            <%= challenge.sampleInput %>
+            <h3>Sample Output</h3>
+            <%= challenge.sampleOutput %>
+
+            <hr/>
+            <div class="row">
+                <div class="pull-left">
+                    <h3>Code editor</h3>
+                </div>
+                <div class="pull-right">
+                    <div class="col-md-3 dropdown">
+                        <a href="#" class="btn btn-simple dropdown-toggle" data-toggle="dropdown">
+                            Choose language ({{lang.title}})
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li ng-repeat="lang in langs"><a ng-click="changeLang(lang)">{{lang.title}}</a ></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div id="editor">print("hello world")</div>
+            <div class="row">
+                <div class="pull-right" ng-if="!running">
+                    <button class="btn btn-lg btn-info" ng-click="runCode()">Run Code</button>
+                    <button class="btn btn-lg btn-success" ng-click="submitCode()">Submit Code</button>
+                </div>
+            </div>
+            <h2>{{message}}</h2>
+
+            <hr/>
+
+            <pre class="bg-danger" ng-hide="errMessage==''">{{errMessage}}</pre>
+            <pre class="bg-success" ng-hide="successMessage==''">{{successMessage}}</pre>
+
+            <table class="table" ng-hide="outputs.length==0">
+                <thead>
+                    <tr>
+                        <th>Testcase #</th>
+                        <th>Program Run</th>
+                        <th>Output Match</th>
+                        <th>Remark</th>
+                        <th>Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="out in outputs" ng-class="{true:'bg-success',false:'bg-danger'}[out.success && out.match]">
+                        <th>{{out.i}}</th>
+                        <th>{{out.success}}</th>
+                        <th>{{out.match}}</th>
+                        <th>{{out.err}}</th>
+                        <th>{{out.score}}</th>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+</div>
+<style type="text/css" media="screen">
+    #editor {
+    width : 100%;
+    height : 500px;
+    }
+</style>
+
+<%- include("components/template-end") %>
+<script src="/plugins/ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script>
+var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.getSession().setMode("ace/mode/javascript");
+    document.getElementById('editor').style.fontSize='12px';
+</script>
+<script src="/angular/angular.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var app = angular.module("app",[]);
+    var scope;
+    var http;
+    var langs = <%- JSON.stringify(langs) %>;
+    var challengeId = <%- JSON.stringify(challenge._id.toString()) %>;
+    var testcasesCount = <%= challenge.testcases.length %>;
+
+    var socket = io();
+
+    app.controller("controller",function($scope,$http){
+        scope = $scope;
+        http = $http;
+        scope.running = false;
+        scope.outputs = [];
+
+        scope.langs = langs;
+        scope.changeLang = function(lang){
+            scope.lang = lang;
+            editor.getSession().setMode("ace/mode/"+lang.ace);
+        }
+        scope.changeLang(langs[1]);
+        scope.errMessage = "";
+        scope.successMessage = "";
+
+        scope.submitCode = function(){
+            scope.running = true;
+            scope.errMessage = "";
+            scope.successMessage = "";
+            while(scope.outputs.length>0)scope.outputs.pop();
+            socket.emit("submitCode",{
+                lang : scope.lang.title,
+                code : editor.getValue(),
+                challengeId : challengeId
+            });
+
+            socket.on("compileFailed",function(err){
+                scope.message = "Compile Failed";
+                scope.errMessage = err;
+                scope.running = false;
+                scope.$apply();
+            });
+
+            socket.on("compileSuccessful",function(){
+                scope.message = "Compile Successful";
+                console.log("compile successful");
+                scope.$apply();
+            });
+
+            socket.on("testcaseDone",function(data){
+                scope.message = "Output";
+                if(scope.outputs.length>=testcasesCount)scope.outputs = [];
+                scope.outputs.push(data);
+                console.log(scope.outputs);
+                if(data.i==testcasesCount-1){
+                    scope.running = false;
+                }
+                scope.$apply();
+            });
+        }
+
+        scope.runCode = function(){
+            scope.running = true;
+            scope.errMessage = "";
+            scope.successMessage = "";
+            while(scope.outputs.length>0)scope.outputs.pop();
+            socket.emit("runCode",{
+                lang : scope.lang.title,
+                code : editor.getValue(),
+                challengeId : challengeId
+            });
+            socket.on("compileFailed",function(err){
+                scope.message = "Compile Failed";
+                scope.errMessage = err;
+                scope.running = false;
+                scope.$apply();
+            });
+            socket.on("compileSuccessful",function(){
+                scope.message = "Compile Successful";
+                console.log("compile successful");
+                scope.$apply();
+            });
+            socket.on("testcaseDone",function(data){
+                scope.message = "Output";
+                console.log(data);
+                if(data.success && data.match){
+                    scope.successMessage = data.output;
+                }else{
+                    scope.errMessage = data.output;
+                }
+                scope.running = false;
+                scope.$apply();
+            });
+        }
+    });
+</script>

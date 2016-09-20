@@ -1,0 +1,130 @@
+<%- include("components/template-start",{
+    active : "contests",
+    bodyClasses : "content-page"
+}) %>
+
+
+<div class="header header-filter" style="background-image: url('https://images.unsplash.com/photo-1423655156442-ccc11daa4e99?crop=entropy&amp;dpr=2&amp;fit=crop&amp;fm=jpg&amp;h=750&amp;ixjsv=2.1.0&amp;ixlib=rb-0.3.5&amp;q=50&amp;w=1450');">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <h1 class="title text-center">Create Contest</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="main main-raised">
+    <div class="container">
+        <form action="" method="post">
+            <div class="row">
+                <h2 class="pull-left">Contest Details</h2>
+                <div class="pull-right"><input type="submit" class="btn btn-lg btn-primary" value="Save Contest"/></div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <h3>Title</h3>
+                </div>
+                <div class="col-md-6 form-group label-floating <%= errors.title?'has-error':'' %>">
+                    <label class="control-label">Contest title</label>
+                    <input type="text" class="form-control" name="title" value="<%= values.title?values.title:'' %>">
+                </div>
+                <% if(errors.title){ %>
+                <div class="col-md-3 text-danger">
+                    <%= errors.title.message %>
+                </div>
+                <% } %>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <h3>Start</h3>
+                </div>
+                <div class="col-md-3 form-group <%= errors.startDate?'has-error':'' %>">
+                    <input type="text" placeholder="Contest start date" class="datepicker form-control" name="startDate" value="<%= values.startDate?values.startDate:'' %>">
+                </div>
+                <div class="col-md-3 form-group <%= errors.startDate?'has-error':'' %>">
+                    <input type="text" placeholder="Contest start time" class="form-control" name="startTime" value="<%= values.startTime?values.startTime:'' %>">
+                </div>
+                <% if(errors.startDate){ %>
+                <div class="col-md-3 text-danger">
+                    <%= errors.startDate.message %>
+                </div>
+                <% } %>
+                <div class="row">
+                    <small>Enter time in 24 hour format , eg : 13:35</small>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <h3>End</h3>
+                </div>
+                <div class="col-md-3 form-group <%= errors.endDate?'has-error':'' %>">
+                    <input type="text" placeholder="Contest end date" class="datepicker form-control" name="endDate" value="<%= values.endDate?values.endDate:'' %>">
+                </div>
+                <div class="col-md-3 form-group <%= errors.endDate?'has-error':'' %>">
+                    <input type="text" placeholder="Contest end time" class="form-control" name="endTime" value="<%= values.endTime?values.endTime:'' %>">
+                </div>
+                <% if(errors.endDate){ %>
+                <div class="col-md-3 text-danger">
+                    <%= errors.endDate.message %>
+                </div>
+                <% } %>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <h3>Tagline</h3>
+                </div>
+                <div class="col-md-6">
+                    <textarea class="form-control" placeholder="Contest tagline" rows="5" name="tagline"><%= values.tagline?values.tagline:'' %></textarea>
+                </div>
+                <% if(errors.details && errors.details.tagline){ %>
+                <div class="col-md-3 text-danger">
+                    <%= errors.details.tagline.message %>
+                </div>
+                <% } %>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <h3>Description</h3>
+                </div>
+                <div class="col-md-6">
+                    <textarea class="form-control" placeholder="Contest Description" rows="10" name="description"><%= values.description?values.description:'' %></textarea>
+                </div>
+                <% if(errors.details && errors.details.description){ %>
+                <div class="col-md-3 text-danger">
+                    <%= errors.details.description.message %>
+                </div>
+                <% } %>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <h3>Prizes</h3>
+                </div>
+                <div class="col-md-6">
+                    <textarea class="form-control" placeholder="Contest Prizes" rows="5" name="prizes"><%= values.prizes?values.prizes:'' %></textarea>
+                </div>
+                <% if(errors.details && errors.details.prizes){ %>
+                <div class="col-md-3 text-danger">
+                    <%= errors.details.prizes.message %>
+                </div>
+                <% } %>
+            </div>
+            <hr/>
+
+        </form>
+    </div>
+</div>
+<script>
+    $(function(){
+        $('.datepicker').datepicker({
+            weekStart:1
+        });
+    });
+</script>
+<%- include("components/template-end") %>

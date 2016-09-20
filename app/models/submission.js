@@ -2,16 +2,14 @@ var mongoose = require("mongoose");
 
 var submissionSchema = mongoose.Schema({
     user : {
-        type : mongoose.Schema.objectId,
+        type : mongoose.Schema.ObjectId,
         ref : "User"
     },
     challenge : {
-        type : mongoose.Schema.objectId,
+        type : mongoose.Schema.ObjectId,
         ref : "Challenge"
     },
-    testCases : [{
-        type : Boolean,
-        default : false
+    testcases : [{
     }],
     code : String,
     language : String,

@@ -1,0 +1,167 @@
+<%- include("components/template-start",{
+    active : "contests",
+    bodyClasses : "content-page"
+}) %>
+
+
+<div class="header header-filter" style="background-image: url('https://images.unsplash.com/photo-1423655156442-ccc11daa4e99?crop=entropy&amp;dpr=2&amp;fit=crop&amp;fm=jpg&amp;h=750&amp;ixjsv=2.1.0&amp;ixlib=rb-0.3.5&amp;q=50&amp;w=1450');">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <h1 class="title text-center">Edit Challenge</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="main main-raised">
+    <div class="container">
+        <form action="" method="post">
+            <div class="row">
+                <div class="card card-nav-tabs card-plain">
+                    <div class="header header-danger">
+                        <!-- colors: "header-primary", "header-info", "header-success", "header-warning", "header-danger" -->
+                        <div class="nav-tabs-navigation">
+                            <div class="nav-tabs-wrapper">
+                                <ul class="nav nav-tabs" data-tabs="tabs">
+                                    <li style="margin-right:10px" class="bg-success"><a href="/administration/contests/<%= contest._id.toString() %>/challenges"><img style="max-width:75%" src="/img/arrow-left.png"></a></li>
+                                    <li class="active"><a href="details">Details</a></li>
+                                    <li class=""><a href="testcases">Test Cases</a></li>
+                                    <li class=""><a href="languages">Languages</a></li>
+                                    <li class=""><a href="challenges">Statistics</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="pull-left">
+                    <h2>Update details</h2>
+                </div>
+                <div class="pull-right">
+                    <input type="submit" class="btn btn-lg btn-primary" value="Save Challenge"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <h3>Title</h3>
+                </div>
+                <div class="col-md-6 form-group label-floating <%= errors.title?'has-error':'' %>">
+                    <label class="control-label">Challenge title</label>
+                    <input type="text" class="form-control" name="title" value="<%= challenge.title?challenge.title:'' %>">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <h3>Difficulty</h3>
+                </div>
+                <div class="col-md-6 <%= errors.difficulty?'has-error':'' %>">
+                    <% difficulties.forEach(function(diff){ %>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="difficulty" value="<%= diff %>" <%= challenge.difficulty==diff?"checked":'' %>>
+                            <%= diff %>
+                        </label>
+                    </div>
+                    <% }) %>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <h3>Total Score</h3>
+                </div>
+                <div class="col-md-6 form-group label-floating <%= errors.score?'has-error':'' %>">
+                    <label class="control-label">Total score</label>
+                    <input type="number" class="form-control" name="score" value="<%= challenge.score?challenge.score:'' %>">
+                </div>
+            </div>
+
+            <!--description : String,-->
+            <!--problemStatement : String,-->
+            <!--inputFormat : String,-->
+            <!--constraints :String,-->
+            <!--outputFormat :String,-->
+            <!--sampleInput :String,-->
+            <!--sampleOutput :String,-->
+
+            <div class="row">
+                <div class="col-md-3">
+                    <h3>Description</h3>
+                </div>
+                <div class="col-md-6">
+                    <textarea class="form-control" placeholder="description" rows="5" name="description"><%= challenge.description?challenge.description:'' %></textarea>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <h3>Problem Statement</h3>
+                </div>
+                <div class="col-md-6">
+                    <textarea class="form-control" placeholder="problemStatement" rows="5" name="problemStatement"><%= challenge.problemStatement?challenge.problemStatement:'' %></textarea>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <h3>Input Format</h3>
+                </div>
+                <div class="col-md-6">
+                    <textarea class="form-control" placeholder="inputFormat" rows="5" name="inputFormat"><%= challenge.inputFormat?challenge.inputFormat:'' %></textarea>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <h3>Output Format</h3>
+                </div>
+                <div class="col-md-6">
+                    <textarea class="form-control" placeholder="outputFormat" rows="5" name="outputFormat"><%= challenge.outputFormat?challenge.outputFormat:'' %></textarea>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <h3>Constraints</h3>
+                </div>
+                <div class="col-md-6">
+                    <textarea class="form-control" placeholder="constraints" rows="5" name="constraints"><%= challenge.constraints?challenge.constraints:'' %></textarea>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <h3>Sample Input</h3>
+                </div>
+                <div class="col-md-6">
+                    <textarea class="form-control" placeholder="sampleInput" rows="5" name="sampleInput"><%= challenge.sampleInput?challenge.sampleInput:'' %></textarea>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <h3>Sample Output</h3>
+                </div>
+                <div class="col-md-6">
+                    <textarea class="form-control" placeholder="sampleOutput" rows="5" name="sampleOutput"><%= challenge.sampleOutput?challenge.sampleOutput:'' %></textarea>
+                </div>
+            </div>
+
+            <hr/>
+
+        </form>
+    </div>
+</div>
+<script>
+    $(function(){
+        $('.datepicker').datepicker({
+            weekStart:1
+        });
+    });
+</script>
+<%- include("components/template-end") %>

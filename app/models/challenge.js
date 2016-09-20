@@ -3,18 +3,29 @@ var mongoose = require("mongoose");
 var challengeSchema = mongoose.Schema({
     title : {
         type : String,
-        unique : true
+        unique : true,
+        uppercase : true,
+        required : true,
+        match : [/^[a-zA-Z0-9 \-]{5,40}$/,"Title can contain letters , numbers , space and hyphen . Length >=5 and <=20."]
     } ,
-    dateCreated : Date,
+    dateCreated : {
+        type : Date ,
+        required : true
+    },
     contest : {
-        type : mongoose.Schema.objectId,
-        ref : "Contest"
+        type : mongoose.Schema.ObjectId,
+        ref : "Contest",
+        required : true
     },
     difficulty :{
         type :String,
-        enum : ["easy", "medium" ,"difficult","advanced","expert"]
+        enum : ["easy", "medium" ,"difficult","advanced","expert"],
+        required : true
     },
-    score : String,
+    score : {
+        type : String ,
+        required : true
+    },
     description : String,
     problemStatement : String,
     inputFormat : String,
@@ -23,17 +34,22 @@ var challengeSchema = mongoose.Schema({
     sampleInput :String,
     sampleOutput :String,
 
-    testCases : [{
-        strength : Number,
-        isSample : Boolean,
+    testcases : [{
+        score : Number,
         input : String,
         output : String
     }],
-    languages : {
+    languages : [{
         type :String,
-        enum : ["c"]    //languages
-    }
+        enum : ["cpp","java","python","node"]    //languages
+    }]
 
 });
 
-module.exports = mongoose.model("Challenge",challengeSchema);
+
+challengeSchema.statics.getAllContestChallenges = function(contestId,callback){
+    Challenge.find({contest : contestId},callback);
+}
+var Challenge = mongoose.model("Challenge",challengeSchema);
+
+module.exports = Challenge;

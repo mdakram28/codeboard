@@ -1,0 +1,149 @@
+<%- include("components/template-start",{
+    active : "contests",
+    bodyClasses : "index-page"
+}) %>
+
+<%
+
+var now = new Date();
+
+var domains = [
+"Artificial Intelligence",
+"Algorithms",
+"Functional Programming",
+"Linux Shell",
+"Python"
+//"C++",
+//"Java",
+//"SQL",
+//"Regex",
+//"Mathematics"
+]
+%>
+
+<%  var idIndex=0;
+    function contestPanel(contest){idIndex++; %>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#contest<%= idIndex %>">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <%= contest.title %>
+                        </div>
+                        <div class="col-sm-2">
+                            <small><%= contest.challenges.length %> Challenges</small>
+                        </div>
+                        <div class="col-sm-4">
+                            <% if(contest.active){ %>
+                            <small><i class="material-icons text-success">check_circle</i><% } %> <%= contest.message %></small>
+                        </div>
+                    </div>
+                </a>
+            </h4>
+        </div>
+        <div id="contest<%= idIndex %>" class="panel-collapse collapse">
+            <div class="panel-body">
+                <%= contest.details.description %>
+                <br/>
+                <br/>
+                <center>
+                    <% if(!contest.registered){ %>
+                    <div class="alert alert-warning">You have not registered for this contest.
+                    </div>
+                    <% } %>
+                    <br/>
+
+                    <a href="/contest/<%- contest.title.split(" ").join("_") %>/challenges" class="btn btn-success btn-lg"><%= contest.registered ? "Enter Contest" : "Sign up" %></a>
+                </center>
+            </div>
+        </div>
+    </div>
+<% } %>
+
+<div class="header header-filter" style="background-image: url('/img/bg2.jpeg');">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="brand">
+                    <h1>CODEBOARD</h1>
+                    <h3>A Badass coding competition website.</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="main main-raised">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-9">
+                <div class="title">
+                    <h2>Active Contests</h2>
+                </div>
+                <div class="panel-group" id="accordion">
+                    <%
+                    var active = 0;
+                    contests.forEach(function(contest){
+                        if(contest.active){
+                            contestPanel(contest);
+                            active++;
+                        }
+                    });
+                    if(active==0){
+                        %>No ongoing contests.<%
+                    }
+                    %>
+                </div>
+
+                <div class="title">
+                    <h2>Upcoming Contests</h2>
+                </div>
+                <div class="panel-group" id="accordion">
+                    <%
+                    var upcoming = 0;
+                    contests.forEach(function(contest){
+                        if(!contest.active && contest.upcoming){
+                            contestPanel(contest);
+                            upcoming++;
+                        }
+                    });
+                    if(upcoming==0){
+                        %>No upcoming contests.<%
+                    }
+                    %>
+                </div>
+
+                <div class="title">
+                    <h2>Ended Contests</h2>
+                </div>
+                <div class="panel-group" id="accordion">
+                    <%
+                    var ended = 0;
+                    contests.forEach(function(contest){
+                        if(!contest.active && !contest.upcoming){
+                            contestPanel(contest);
+                            ended++;
+                        }
+                    });
+                    if(ended==0){
+                        %>No contests have ended.<%
+                    }
+                    %>
+                </div>
+            </div>
+            <div class="col-sm-3" style="margin-top:50px">
+                <h4>Domain</h4>
+                <% domains.forEach(function(domain){ %>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="domains">
+                            <%= domain %>
+                        </label>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include("components/template-end") %>

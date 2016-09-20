@@ -1,0 +1,59 @@
+<%- include("components/template-start",{
+    active : "contests",
+    bodyClasses : "content-page"
+}) %>
+
+<%
+function getContestEditLink(contest){
+return "/administration/contests/"+contest._id.toString()+"/details";
+}
+%>
+
+<div class="header header-filter" style="background-image: url('https://images.unsplash.com/photo-1423655156442-ccc11daa4e99?crop=entropy&amp;dpr=2&amp;fit=crop&amp;fm=jpg&amp;h=750&amp;ixjsv=2.1.0&amp;ixlib=rb-0.3.5&amp;q=50&amp;w=1450');">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <h1 class="title text-center">Manage Contests</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="main main-raised">
+    <div class="container">
+        <div class="row">
+	        <h2 class="pull-left">Contests</h2>
+            <div class="pull-right"><a href="/administration/contests/create" class="btn btn-lg btn-primary">New Contest</a></div>
+	    </div>
+        <div class="row">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Contest Name</th>
+                        <th>Contest Owner</th>
+                        <th>Status</th>
+                        <th class="text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% contests.forEach(function(contest){ %>
+                    <tr>
+                        <td><a href="<%= getContestEditLink(contest) %>"><%= contest.title %></a></td>
+                        <td><%= contest.owner.username %></td>
+                        <td><%= contest.status %></td>
+                        <td class="td-actions text-right">
+                            <button type="button" rel="tooltip" title="Edit Contest" class="btn btn-success btn-simple btn-xs">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                            <button type="button" rel="tooltip" title="Remove contest" class="btn btn-danger btn-simple btn-xs">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<%- include("components/template-end") %>

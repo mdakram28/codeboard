@@ -1,0 +1,49 @@
+<%- include('components/template-start',{
+    bodyClasses : "signup-page",
+    active : "login"
+}) %>
+<div class="header header-filter" style="background-image: url('/img/city.jpg'); background-size: cover; background-position: top center;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
+                <div class="card card-signup">
+                    <form class="form" method="POST" action="/auth/login">
+                        <div class="header header-primary text-center">
+                            <h4>Login</h4>
+                        </div>
+                        <div class="content">
+
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="material-icons">face</i>
+                                    </span>
+                                    <input type="text" class="form-control" placeholder="username..." name="username">
+                                </div>
+
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="material-icons">lock_outline</i>
+                                    </span>
+                                    <input type="password" placeholder="Password..." class="form-control" name="password"/>
+                                </div>
+
+                            <!-- If you want to add a checkbox to this form, uncomment this code
+
+                            <div class="checkbox">
+                            <label>
+                            <input type="checkbox" name="optionsCheckboxes" checked>
+                            Subscribe to newsletter
+                        </label>
+                    </div> -->
+                </div>
+                <div class="footer text-center">
+                    <input type="submit" class="btn btn-simple btn-primary btn-lg" value="Login">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+<%- include('components/template-end') %>

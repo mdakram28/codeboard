@@ -1,0 +1,50 @@
+<%- include("components/template-start",{
+    active : "contests",
+    bodyClasses : "content-page"
+}) %>
+
+<div class="header header-filter" style="background-image: url('/img/bg3.jpeg');">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <h1 class="title text-center"><%= contest.title %></h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="main main-raised">
+    <div class="container">
+        <div class="row">
+	        <h2 class="pull-left">Attempt Challenges</h2>
+	    </div>
+        <div class="row">
+            <div class="col-sm-9">
+                <% challenges.forEach(function(ch){ %>
+                <div class="row well well-sm">
+                    <div class="col-sm-12">
+                        <h4 class="text-primary pull-left"><%= ch.title %></h4>
+
+                    </div>
+                    <small class="col-sm-12">
+                        <h5><%- ch.description %></h5>
+                    </small>
+                    <div class="col-sm-12">
+                        <div class="pull-right">
+                            <h5>
+                                <b>Difficulty : </b><%= ch.difficulty %>
+                                <b>Score : </b><%= ch.score %>
+                                <a style="margin-top: -10px;margin-left: 10px;" href="challenges/<%= ch._id %>/problem" class="pull-right btn btn-primary">Attempt</a>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+                <% }) %>
+            </div>
+            <div class="col-sm-3">
+
+            </div>
+        </div>
+    </div>
+</div>
+<%- include("components/template-end") %>

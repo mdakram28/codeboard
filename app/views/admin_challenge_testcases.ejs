@@ -1,0 +1,127 @@
+<%- include("components/template-start",{
+    active : "contests",
+    bodyClasses : "content-page"
+}) %>
+
+
+<div class="header header-filter" style="background-image: url('https://images.unsplash.com/photo-1423655156442-ccc11daa4e99?crop=entropy&amp;dpr=2&amp;fit=crop&amp;fm=jpg&amp;h=750&amp;ixjsv=2.1.0&amp;ixlib=rb-0.3.5&amp;q=50&amp;w=1450');">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <h1 class="title text-center">Edit Challenge</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="main main-raised">
+    <div class="container">
+        <form action="saveTestcase" method="post">
+            <div class="row">
+                <div class="card card-nav-tabs card-plain">
+                    <div class="header header-danger">
+                        <!-- colors: "header-primary", "header-info", "header-success", "header-warning", "header-danger" -->
+                        <div class="nav-tabs-navigation">
+                            <div class="nav-tabs-wrapper">
+                                <ul class="nav nav-tabs" data-tabs="tabs">
+                                    <li style="margin-right:10px" class="bg-success"><a href="/administration/contests/<%= contest._id.toString() %>/challenges"><img style="max-width:75%" src="/img/arrow-left.png"></a></li>
+                                    <li class=""><a href="details">Details</a></li>
+                                    <li class="active"><a href="testcases">Test Cases</a></li>
+                                    <li class=""><a href="languages">Languages</a></li>
+                                    <li class=""><a href="challenges">Statistics</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="pull-left">
+                    <h2>Manage testcases</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <form>
+
+                        <div class="row">
+                            <div class="pull-left">
+                                <h4>Add/Edit Testcase</h4>
+                            </div>
+                            <div class="pull-right">
+                                <input type="submit" class="btn btn-primary" value="Add testcase"/>
+                            </div>
+                        </div>
+                        <input type="hidden" value="<%= index %>" name="index">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h5>Score</h5>
+                            </div>
+                            <div class="col-md-9 form-group label-floating">
+                                <input type="number" class="form-control" name="score" value="<%= testcase.score?testcase.score:'' %>">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h5>STDIN</h5>
+                            </div>
+                            <div class="col-md-9 form-group label-floating">
+                                <textarea class="form-control" name="input" rows="10"><%= testcase.input?testcase.input:'' %></textarea>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h5>STDOUT</h5>
+                            </div>
+                            <div class="col-md-9 form-group label-floating">
+                                <textarea class="form-control" name="output" rows="10"><%= testcase.output?testcase.output:'' %></textarea>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="col-md-6">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Testcase Number</th>
+                            <th>Testcase Score</th>
+                            <th class="text-right">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% testcases.forEach(function(tc,index){ %>
+                        <tr>
+                            <td><%= index+1 %></td>
+                            <td><%= tc.score %></td>
+                            <td class="td-actions text-right">
+                                <a href="testcases?i=<%= index %>" rel="tooltip" title="Edit Testcase" class="btn btn-success btn-simple btn-xs">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <a href="deleteTestcase?i=<%= index %>" rel="tooltip" title="Remove Testcase" class="btn btn-danger btn-simple btn-xs">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <hr/>
+
+        </form>
+    </div>
+</div>
+<script>
+    $(function(){
+        $('.datepicker').datepicker({
+            weekStart:1
+        });
+    });
+</script>
+<%- include("components/template-end") %>
